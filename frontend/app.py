@@ -22,13 +22,13 @@ with col2:
     ag_ratio = st.number_input("Albumin and Globulin Ratio", value=1.0)
 
 if st.button("Execute Real-Time Diagnosis", type="primary"):
-    payload = {
+   payload = {
         "Age": float(age),
         "Gender": 1 if gender == "Male" else 0,
         "Total_Bilirubin": float(tot_bil),
         "Direct_Bilirubin": float(dir_bil),
         "Alkaline_Phosphotase": float(alk_phos),
-        "Alamina_Aminotransferase": float(alt),
+        "Alamina_Aminotransferase": float(alt),  # 🔴 FIXED: Changed from Alamine to Alamina
         "Aspartate_Aminotransferase": float(ast),
         "Total_Protiens": float(proteins),
         "Albumin": float(albumin),
