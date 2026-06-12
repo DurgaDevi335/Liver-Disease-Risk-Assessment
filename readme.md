@@ -1,19 +1,52 @@
 # 🩺 Liver Disease Risk Prediction System
 
-A Machine Learning-based web application that predicts the likelihood of liver disease using patient clinical data.
+A production-ready Machine Learning application that predicts the risk of liver disease using patient clinical and laboratory data. The project implements a complete end-to-end ML workflow, including data preprocessing, exploratory data analysis (EDA), model training, evaluation, API development, and web application deployment.
 
-This project follows a complete end-to-end workflow, including data preprocessing, model training, backend API development, and frontend deployment. Users can enter patient health parameters through an interactive web interface and receive real-time disease risk predictions.
+The system enables users to enter patient health parameters and receive real-time liver disease risk predictions through a FastAPI backend and Streamlit frontend.
 
-Key Components
-Machine Learning Pipeline for data preprocessing, feature engineering, model training, and evaluation
-FastAPI Backend for serving prediction requests through REST APIs
-Streamlit Frontend for an interactive and user-friendly interface
-Model Comparison Framework to evaluate multiple machine learning algorithms and select the best-performing model
 ---
 
-# 📌 Project Architecture
+## 📌 Project Overview
 
-The application is organized into three independent modules:
+Liver disease is a significant global health concern, and early detection is critical for effective treatment and improved patient outcomes. This project leverages supervised machine learning algorithms to identify potential liver disease cases based on patient health indicators.
+
+### Key Objectives
+
+- Develop an accurate liver disease prediction model
+- Compare multiple machine learning algorithms
+- Deploy the model through a scalable API
+- Provide a user-friendly prediction interface
+- Minimize false negatives in medical predictions
+
+---
+
+## 🏗️ System Architecture
+
+```text
+Patient Data
+      │
+      ▼
+Data Preprocessing
+      │
+      ▼
+Feature Engineering
+      │
+      ▼
+Machine Learning Model
+      │
+      ▼
+FastAPI Backend
+      │
+      ▼
+Streamlit Frontend
+      │
+      ▼
+Risk Prediction
+```
+
+---
+
+## 📂 Project Structure
 
 ```text
 Liver-Disease-Risk-Prediction/
@@ -28,119 +61,127 @@ Liver-Disease-Risk-Prediction/
 │
 ├── backend/
 │   ├── api.py
+│   ├── model_loader.py
 │   └── requirements.txt
 │
 ├── frontend/
 │   ├── app.py
 │   └── requirements.txt
 │
+├── requirements.txt
 └── README.md
 ```
 
 ---
 
-# 🚀 Features
+## 🔬 Exploratory Data Analysis (EDA)
 
-### Machine Learning Pipeline
+Exploratory Data Analysis was performed to understand the dataset, identify patterns, analyze feature relationships, and support model development.
 
-* Data preprocessing and cleaning
-* Feature engineering
-* Model training and evaluation
-* Multiple model comparison
-* Model persistence for deployment
-
-### Backend API
-
-* Built using **FastAPI**
-* RESTful prediction endpoints
-* Fast inference performance
-* JSON-based communication
-
-### Frontend Dashboard
-
-* Built using **Streamlit**
-* Interactive patient data input
-* Real-time prediction results
-* Clean and intuitive user interface
-
-### End-to-End Workflow
-
-```text
-Patient Data
-      ↓
-Data Preprocessing
-      ↓
-Trained ML Model
-      ↓
-FastAPI Backend
-      ↓
-Streamlit Frontend
-      ↓
-Risk Prediction Output
-```
-
----
-
-# 📊 Exploratory Data Analysis (EDA)
-
-## Target Label Balance
+### Target Label Distribution
 
 ![Target Label Balance](core/target_distribution.png)
 
-### Purpose
+#### Analysis
 
-Understanding class distribution is critical in medical datasets because severe imbalance can lead to biased predictions and poor generalization.
+- Examined class distribution of target labels
+- Identified potential class imbalance
+- Evaluated the need for resampling techniques
+- Ensured reliable model evaluation
 
 ---
 
-## Feature Interaction Correlations
+### Feature Correlation Matrix
 
 ![Feature Interaction Correlations](core/correlation_matrix.png)
 
-### Purpose
+#### Analysis
 
-Correlation analysis helps identify:
-
-* Highly related features
-* Potential multicollinearity
-* Important feature interactions
-* Data-driven feature selection opportunities
+- Identified relationships between features
+- Detected highly correlated variables
+- Evaluated multicollinearity
+- Supported feature selection decisions
 
 ---
 
-# 🤖 Machine Learning Models Evaluated
+## ⚙️ Data Preprocessing Pipeline
 
-The following classification models were trained and compared.
+The preprocessing workflow includes:
 
-| Model Architecture     | Accuracy | Precision | Recall (Sensitivity) | F1-Score |
-| ---------------------- | -------- | --------- | -------------------- | -------- |
-| KNN                    | 65.52%   | 73.12%    | 81.93%               | 77.27%   |
-| Decision Tree          | 71.55%   | 77.78%    | 84.34%               | 80.92%   |
-| Random Forest Ensemble | 73.28%   | 75.49%    | 92.77%               | 83.24%   |
-| XGBoost Framework      | 74.14%   | 76.53%    | 90.36%               | 82.87%   |
+### Data Cleaning
+
+- Handling missing values
+- Removing inconsistent records
+- Data validation and quality checks
+
+### Feature Engineering
+
+- Feature transformation
+- Feature scaling and normalization
+- Feature selection
+
+### Dataset Preparation
+
+- Train-test split
+- Target encoding
+- Input feature preparation
 
 ---
 
-# 🏆 Best Performing Model
+## 🤖 Machine Learning Models Evaluated
+
+The following classification algorithms were trained and evaluated:
+
+### 1. K-Nearest Neighbors (KNN)
+
+A distance-based algorithm that classifies samples using the nearest neighboring data points.
+
+### 2. Decision Tree
+
+A tree-based supervised learning algorithm that generates interpretable decision rules.
+
+### 3. Random Forest Ensemble
+
+An ensemble model that combines multiple decision trees to improve generalization and reduce overfitting.
+
+### 4. XGBoost Framework
+
+A gradient boosting algorithm optimized for performance, scalability, and predictive accuracy.
+
+---
+
+## 📊 Model Performance Comparison
+
+| Model Architecture | Accuracy | Precision | Recall (Sensitivity) | F1-Score |
+|-------------------|----------|-----------|----------------------|----------|
+| KNN | 65.52% | 73.12% | 81.93% | 77.27% |
+| Decision Tree | 71.55% | 77.78% | 84.34% | 80.92% |
+| Random Forest Ensemble | 73.28% | 75.49% | 92.77% | 83.24% |
+| XGBoost Framework | 74.14% | 76.53% | 90.36% | 82.87% |
+
+---
+
+## 🏆 Best Performing Model
 
 ### XGBoost Framework
 
-The XGBoost model achieved the highest overall accuracy while maintaining strong precision, recall, and F1-score performance.
+XGBoost achieved the highest overall accuracy while maintaining strong precision, recall, and F1-score values across the evaluation dataset.
 
-### Key Advantages
+### Advantages
 
-* Excellent generalization capability
-* Handles complex feature interactions
-* Reduced overfitting compared to standalone trees
-* Strong performance on structured healthcare datasets
+- Strong predictive performance
+- Efficient gradient boosting implementation
+- Handles complex feature interactions
+- Good generalization capability
+- Robust performance on structured healthcare datasets
 
 ---
 
-# ⚠️ Why Recall (Sensitivity) Matters Most
+## 🚨 Why Recall (Sensitivity) Matters Most
 
-In medical diagnosis systems, **Recall (Sensitivity)** is often the most important evaluation metric.
+For medical diagnosis systems, **Recall (Sensitivity)** is often the most important evaluation metric.
 
-### Recall Formula
+### Formula
 
 ```text
 Recall = True Positives / (True Positives + False Negatives)
@@ -151,90 +192,87 @@ Recall = True Positives / (True Positives + False Negatives)
 A **False Negative** occurs when:
 
 ```text
-Patient has liver disease
-BUT
-Model predicts healthy
+Actual Condition : Liver Disease Present
+Prediction       : Healthy
 ```
 
 This is the most dangerous error because:
 
-* Disease remains undetected
-* Treatment may be delayed
-* Health complications may worsen
-* Patient outcomes may be negatively affected
+- The disease remains undetected
+- Treatment may be delayed
+- Clinical intervention may not occur in time
+- Patient outcomes may worsen
 
-### Project Objective
+### Project Goal
 
-The primary goal is to identify as many potentially affected patients as possible.
+The primary objective is to identify as many patients with liver disease as possible.
 
-Therefore:
+✅ High Recall → More diseased patients correctly identified
 
-✅ High Recall = More diseased patients correctly detected
+❌ Low Recall → Higher risk of missing actual disease cases
 
-❌ Low Recall = Higher risk of missing actual cases
-
-For healthcare applications, minimizing False Negatives is often more important than maximizing overall accuracy.
+For this reason, Recall was treated as a key evaluation metric during model selection.
 
 ---
 
-# 🛠️ Technology Stack
+## 🚀 Technology Stack
 
-## Machine Learning
+### Programming Language
 
-* Python
-* Scikit-Learn
-* XGBoost
-* NumPy
-* Pandas
+- Python
 
-## Data Visualization
+### Machine Learning
 
-* Matplotlib
-* Seaborn
+- Scikit-Learn
+- XGBoost
 
-## Backend
+### Data Processing
 
-* FastAPI
-* Uvicorn
+- Pandas
+- NumPy
 
-## Frontend
+### Data Visualization
 
-* Streamlit
+- Matplotlib
+- Seaborn
+
+### Backend
+
+- FastAPI
+- Uvicorn
+
+### Frontend
+
+- Streamlit
 
 ---
 
-# ⚙️ Installation & Setup
+## ⚡ Installation
 
-## 1. Clone Repository
+### Clone Repository
 
 ```bash
 git clone https://github.com/your-username/liver-disease-risk-prediction.git
 cd liver-disease-risk-prediction
 ```
 
----
+### Create Virtual Environment
 
-## 2. Create Virtual Environment
+**Windows**
 
 ```bash
 python -m venv venv
-```
-
-### Windows
-
-```bash
 venv\Scripts\activate
 ```
 
-### Linux / macOS
+**Linux/macOS**
 
 ```bash
+python -m venv venv
 source venv/bin/activate
 ```
 
----
-
-## 3. Install Dependencies
+### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -242,15 +280,11 @@ pip install -r requirements.txt
 
 ---
 
-# ▶️ Running the Complete System
+## ▶️ Running the Project
 
 Open **three separate terminal windows**.
 
----
-
-## Window 1 — Train the Model
-
-Navigate to the core directory:
+### Window 1 — Train the Model
 
 ```bash
 cd core
@@ -259,29 +293,27 @@ python train.py
 
 This step:
 
-* Loads the dataset
-* Performs preprocessing
-* Trains the model
-* Saves trained artifacts
+- Loads the dataset
+- Performs preprocessing
+- Trains machine learning models
+- Saves trained model artifacts
 
 ---
 
-## Window 2 — Start FastAPI Backend
-
-Navigate to the backend directory:
+### Window 2 — Start FastAPI Backend
 
 ```bash
 cd backend
 uvicorn api:app --reload
 ```
 
-Backend will start at:
+Backend URL:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-API documentation:
+API Documentation:
 
 ```text
 http://127.0.0.1:8000/docs
@@ -289,100 +321,85 @@ http://127.0.0.1:8000/docs
 
 ---
 
-## Window 3 — Launch Streamlit Frontend
-
-Navigate to the frontend directory:
+### Window 3 — Launch Streamlit Frontend
 
 ```bash
 cd frontend
 streamlit run app.py
 ```
 
-The Streamlit application will open automatically in your browser.
-
----
-
-# 📡 API Workflow
+Frontend URL:
 
 ```text
-Streamlit Frontend
-        ↓
-FastAPI Backend
-        ↓
-ML Prediction Model
-        ↓
-Prediction Result
-        ↓
-Frontend Display
+http://localhost:8501
 ```
 
 ---
 
-# 📈 Future Improvements
+## 🔌 API Workflow
 
-* Advanced feature engineering
-* Hyperparameter optimization
-* Explainable AI (SHAP/LIME)
-* Docker containerization
-* Cloud deployment
-* Continuous model monitoring
-* Electronic Health Record (EHR) integration
-
----
-
-# 🎯 Project Highlights
-
-✅ End-to-End Machine Learning Workflow
-
-✅ Healthcare-Oriented Risk Prediction
-
-✅ FastAPI Production Backend
-
-✅ Streamlit Interactive Dashboard
-
-✅ Multiple Model Benchmarking
-
-✅ Automated Training Pipeline
-
-✅ Medical Metric Focus (Recall Optimization)
-
-✅ Recruiter-Friendly Architecture
+```text
+Streamlit Frontend
+        │
+        ▼
+FastAPI Backend
+        │
+        ▼
+Trained ML Model
+        │
+        ▼
+Prediction Result
+```
 
 ---
 
-# 👩‍💻 Author
+## 📈 Future Enhancements
+
+- Hyperparameter tuning
+- Explainable AI using SHAP
+- Docker containerization
+- CI/CD integration
+- Cloud deployment
+- Model monitoring
+- Automated retraining pipeline
+
+---
+
+## 🎯 Key Highlights
+
+- End-to-End Machine Learning Workflow
+- Healthcare Risk Prediction Application
+- FastAPI REST API Deployment
+- Interactive Streamlit Dashboard
+- Multiple Model Benchmarking
+- Comprehensive EDA
+- Recall-Oriented Model Evaluation
+- Modular and Scalable Architecture
+
+---
+
+## 👩‍💻 Author
 
 **Durga Devi Ravipati**
 
-B.Tech – Computer Science & Engineering (Cyber Security)
+B.Tech, Computer Science & Engineering (Cyber Security)
 
-Passionate about:
+### Areas of Interest
 
-* Machine Learning
-* Artificial Intelligence
-* Full Stack Development
-* Healthcare AI Solutions
+- Machine Learning
+- Artificial Intelligence
+- Data Science
+- Healthcare Analytics
+- Full Stack Development
 
----
-
-# ⭐ Acknowledgements
-
-Special thanks to the open-source community and the developers of:
-
-* Scikit-Learn
-* XGBoost
-* FastAPI
-* Streamlit
-* Pandas
-* NumPy
-* Matplotlib
-
-for providing the tools that made this project possible.
+GitHub: https://github.com/DurgaDevi335
 
 ---
 
-## 📜 License
+## 📜 Disclaimer
 
-This project is intended for educational, research, and portfolio purposes.
+This project is intended for educational, research, and portfolio purposes only. Predictions generated by the system should not be used as a substitute for professional medical diagnosis, treatment, or clinical decision-making.
 
-Please verify all medical decisions with qualified healthcare professionals. This system is designed to assist prediction workflows and should not replace professional medical diagnosis.
+---
+
+⭐ If you found this project useful, consider giving it a star!
