@@ -1,81 +1,45 @@
+# backend/api.py
 import os
+from fastapi import FastAPI
+from pydantic import BaseModel
 import joblib
 import numpy as np
-import pandas as pd
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 
-# 1. Initialize the FastAPI application
-app = FastAPI(title="Liver Disease Diagnostic Backend", version="1.0")
+app = FastAPI(title="Core Liver Diagnostic Service")
 
-# 🔴 THE FIX: Enable CORS so your Streamlit frontend can connect safely
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allows any frontend website to access this API
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all HTTP actions (POST, GET, etc.)
-    allow_headers=["*"],  # Allows all headers
-)
+# Locate serialized pipeline objects in the 'core' folder
+CORE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'core'))
+scaler = joblib.load(os.path.join(CORE_DIR, 'production_scaler.joblib'))
+model = joblib.load(os.path.join(CORE_DIR, 'best_liver_model.joblib'))
 
-# 2. Define the exact path to your trained models
-# Looks inside the core/ folder where train.py saves them
-MODEL_PATH = os.path.join("..", "core", "best_liver_model.joblib")
-SCALER_PATH = os.path.join("..", "core", "production_scaler.joblib")
-
-# Fallback pathing in case Render executes from the root directory
-if not os.path.exists(MODEL_PATH):
-    MODEL_PATH = os.path.join("core", "best_liver_model.joblib")
-    SCALER_PATH = os.path.join("core", "production_scaler.joblib")
-
-# 3. Load the machine learning assets into system memory
-try:
-    model = joblib.load(MODEL_PATH)
-    scaler = joblib.load(SCALER_PATH)
-    print("[+] Successfully loaded clinical model and scaler assets.")
-except Exception as e:
-    print(f"[-] Critical Error loading assets: {str(e)}")
-    model = None
-    scaler = None
-
-# 4. Define the incoming patient data structure using Pydantic
-class PatientData(BaseModel):
-    Age: float
-    Gender: int  # 1 = Male, 0 = Female
+class PatientLabData(BaseModel):
+    Age: int
+    Gender: int
     Total_Bilirubin: float
     Direct_Bilirubin: float
-    Alkaline_Phosphotase: float
-    Alamina_Aminotransferase: float
-    Aspartate_Aminotransferase: float
+    Alkaline_Phosphotase: int
+    Alamine_Aminotransferase: int
+    Aspartate_Aminotransferase: int
     Total_Protiens: float
     Albumin: float
     Albumin_and_Globulin_Ratio: float
 
-@app.get("/")
-def read_root():
-    return {"status": "healthy", "message": "Liver Disease Prediction API is operational."}
-
 @app.post("/predict")
-def predict_risk(patient: PatientData):
-    if model is None or scaler is None:
-        raise HTTPException(status_code=500, detail="Machine learning models are not loaded on the server.")
+def run_predict(patient: PatientLabData):
+    # Assemble feature vector matching original feature matrix dimensions
+    features = np.array([[
+        patient.Age, patient.Gender, patient.Total_Bilirubin, patient.Direct_Bilirubin,
+        patient.Alkaline_Phosphotase, patient.Alamine_Aminotransferase, 
+        patient.Aspartate_Aminotransferase, patient.Total_Protiens, 
+        patient.Albumin, patient.Albumin_and_Globulin_Ratio
+    ]])
     
-    try:
-        # Convert incoming JSON data into a dataframe row
-        input_data = pd.DataFrame([patient.dict()])
-        
-        # Scale the features using the frozen production scaler
-        scaled_features = scaler.transform(input_data)
-        
-        # Run inference using the winning Random Forest model weights
-        prediction = model.predict(scaled_features)[0]
-        probability = model.predict_proba(scaled_features)[0][1]
-        
-        # Return structured response to frontend
-        return {
-            "risk_status": int(prediction),  # 1 = High Risk, 0 = Low Risk
-            "confidence_score": float(probability)
-        }
-        
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Inference error: {str(e)}")
+    # Scale and make prediction
+    scaled_features = scaler.transform(features)
+    prediction = int(model.predict(scaled_features)[0])
+    probability = float(model.predict_proba(scaled_features)[0][1])
+    
+    return {
+        "disease_detected": True if prediction == 1 else False,
+        "risk_percentage": round(probability * 100, 2)
+    }
