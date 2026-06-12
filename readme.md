@@ -1,221 +1,319 @@
 # 🩺 Liver Disease Risk Prediction System
 
-A production-ready Machine Learning application that predicts the risk of liver disease using patient clinical and laboratory data. The project implements a complete end-to-end ML workflow, including data preprocessing, exploratory data analysis (EDA), model training, evaluation, API development, and web application deployment.
+A full-stack Machine Learning application designed to predict the likelihood of liver disease using patient clinical and biochemical health indicators.
 
-The system enables users to enter patient health parameters and receive real-time liver disease risk predictions through a FastAPI backend and Streamlit frontend.
+This project implements an end-to-end Machine Learning workflow, including data preprocessing, exploratory data analysis (EDA), feature engineering, model training, model evaluation, REST API development, and real-time prediction through an interactive web interface.
+
+The system is built using a FastAPI backend and Streamlit frontend, enabling users to obtain instant liver disease risk assessments from patient health data.
 
 ---
 
 ## 📌 Project Overview
 
-Liver disease is a significant global health concern, and early detection is critical for effective treatment and improved patient outcomes. This project leverages supervised machine learning algorithms to identify potential liver disease cases based on patient health indicators.
+Liver disease remains a major healthcare challenge worldwide. Early identification of high-risk patients can help support timely diagnosis and treatment decisions.
 
-### Key Objectives
+This project leverages Machine Learning techniques to analyze patient medical parameters and classify whether a patient is likely to have liver disease.
 
-- Develop an accurate liver disease prediction model
-- Compare multiple machine learning algorithms
-- Deploy the model through a scalable API
-- Provide a user-friendly prediction interface
-- Minimize false negatives in medical predictions
+The complete workflow covers:
+
+- Data Cleaning
+- Exploratory Data Analysis (EDA)
+- Feature Preprocessing
+- Outlier Treatment
+- Model Training
+- Model Evaluation
+- Model Comparison
+- Backend API Development
+- Frontend Deployment
+- Real-Time Prediction
+
+---
+
+## 🎯 Objectives
+
+- Predict liver disease risk using patient health indicators.
+- Compare multiple machine learning algorithms.
+- Identify the best-performing model.
+- Build a scalable prediction API.
+- Provide an easy-to-use web interface.
+- Support early risk assessment through predictive analytics.
 
 ---
 
 ## 🏗️ System Architecture
 
 ```text
-Patient Data
-      │
-      ▼
-Data Preprocessing
-      │
-      ▼
-Feature Engineering
-      │
-      ▼
-Machine Learning Model
-      │
-      ▼
-FastAPI Backend
-      │
-      ▼
-Streamlit Frontend
-      │
-      ▼
-Risk Prediction
+Patient Health Parameters
+            │
+            ▼
+     Streamlit Frontend
+            │
+            ▼
+      FastAPI Backend
+            │
+            ▼
+   Trained ML Model
+            │
+            ▼
+ Risk Prediction Result
+            │
+            ▼
+Displayed to User
 ```
 
 ---
 
-## 📂 Project Structure
+# 📂 Project Structure
 
 ```text
-Liver-Disease-Risk-Prediction/
+Liver-Disease-Risk-Assessment/
+│
+├── backend/
+│   └── api.py
 │
 ├── core/
 │   ├── train.py
+│   ├── best_liver_model.joblib
+│   ├── production_scaler.joblib
 │   ├── target_distribution.png
 │   ├── correlation_matrix.png
-│   ├── datasets/
-│   ├── models/
-│   └── preprocessing/
+│   └── model_comparison.png
 │
-├── backend/
-│   ├── api.py
-│   ├── model_loader.py
-│   └── requirements.txt
+├── data/
+│   └── HealthCareData.csv
 │
 ├── frontend/
-│   ├── app.py
-│   └── requirements.txt
+│   └── app.py
 │
 ├── requirements.txt
-└── README.md
+├── README.md
+└── .gitignore
 ```
 
 ---
 
-## 🔬 Exploratory Data Analysis (EDA)
+# 📊 Dataset Information
 
-Exploratory Data Analysis was performed to understand the dataset, identify patterns, analyze feature relationships, and support model development.
+The dataset was provided through the SmartBridge internship program.
 
-### Target Label Distribution
+The dataset contains patient demographic information and liver-related clinical measurements used to classify liver disease risk.
 
-![Target Label Balance](core/target_distribution.png)
+### Features
 
-#### Analysis
+- Age
+- Gender
+- Total Bilirubin
+- Direct Bilirubin
+- Alkaline Phosphotase
+- Alamine Aminotransferase
+- Aspartate Aminotransferase
+- Total Proteins
+- Albumin
+- Albumin and Globulin Ratio
 
-- Examined class distribution of target labels
-- Identified potential class imbalance
-- Evaluated the need for resampling techniques
-- Ensured reliable model evaluation
+### Target Variable
 
----
-
-### Feature Correlation Matrix
-
-![Feature Interaction Correlations](core/correlation_matrix.png)
-
-#### Analysis
-
-- Identified relationships between features
-- Detected highly correlated variables
-- Evaluated multicollinearity
-- Supported feature selection decisions
+| Value | Meaning |
+|---------|---------|
+| 1 | Liver Disease |
+| 0 | Healthy |
 
 ---
 
-## ⚙️ Data Preprocessing Pipeline
+# 🔬 Exploratory Data Analysis (EDA)
 
-The preprocessing workflow includes:
-
-### Data Cleaning
-
-- Handling missing values
-- Removing inconsistent records
-- Data validation and quality checks
-
-### Feature Engineering
-
-- Feature transformation
-- Feature scaling and normalization
-- Feature selection
-
-### Dataset Preparation
-
-- Train-test split
-- Target encoding
-- Input feature preparation
+Exploratory Data Analysis was performed to understand data distribution, identify correlations, and inspect class balance before model development.
 
 ---
 
-## 🤖 Machine Learning Models Evaluated
+## Target Distribution Analysis
 
-The following classification algorithms were trained and evaluated:
+The target distribution chart shows the proportion of liver disease and healthy patients present in the dataset.
 
-### 1. K-Nearest Neighbors (KNN)
+### Generated Visualization
 
-A distance-based algorithm that classifies samples using the nearest neighboring data points.
+![Target Distribution](core/target_distribution.png)
 
-### 2. Decision Tree
+### Insights
 
-A tree-based supervised learning algorithm that generates interpretable decision rules.
-
-### 3. Random Forest Ensemble
-
-An ensemble model that combines multiple decision trees to improve generalization and reduce overfitting.
-
-### 4. XGBoost Framework
-
-A gradient boosting algorithm optimized for performance, scalability, and predictive accuracy.
+- Dataset contains both disease and healthy classes.
+- Stratified train-test splitting was used to preserve class distribution.
+- Understanding class balance helps ensure reliable model evaluation.
 
 ---
 
-## 📊 Model Performance Comparison
+## Feature Correlation Analysis
 
-| Model Architecture | Accuracy | Precision | Recall (Sensitivity) | F1-Score |
-|-------------------|----------|-----------|----------------------|----------|
-| KNN | 65.52% | 73.12% | 81.93% | 77.27% |
-| Decision Tree | 71.55% | 77.78% | 84.34% | 80.92% |
-| Random Forest Ensemble | 73.28% | 75.49% | 92.77% | 83.24% |
-| XGBoost Framework | 74.14% | 76.53% | 90.36% | 82.87% |
+A Pearson Correlation Heatmap was generated to identify relationships between features.
 
----
+### Generated Visualization
 
-## 🏆 Best Performing Model
+![Correlation Matrix](core/correlation_matrix.png)
 
-### XGBoost Framework
+### Insights
 
-XGBoost achieved the highest overall accuracy while maintaining strong precision, recall, and F1-score values across the evaluation dataset.
-
-### Advantages
-
-- Strong predictive performance
-- Efficient gradient boosting implementation
-- Handles complex feature interactions
-- Good generalization capability
-- Robust performance on structured healthcare datasets
+- Strong relationships exist among several biochemical indicators.
+- Bilirubin-related features exhibit notable correlations.
+- Correlation analysis helps understand feature interactions before training.
 
 ---
 
-## 🚨 Why Recall (Sensitivity) Matters Most
+# ⚙️ Data Preprocessing Pipeline
 
-For medical diagnosis systems, **Recall (Sensitivity)** is often the most important evaluation metric.
+The following preprocessing steps were applied before model training.
 
-### Formula
+## 1. Missing Value Handling
+
+Missing numerical values were replaced using Median Imputation.
+
+```python
+dataset[column].fillna(dataset[column].median())
+```
+
+---
+
+## 2. Categorical Encoding
+
+Gender values were converted into numerical form.
+
+| Gender | Encoding |
+|----------|----------|
+| Male | 1 |
+| Female | 0 |
+
+---
+
+## 3. Target Label Encoding
+
+The original target labels were transformed into binary classes.
+
+| Original Label | Encoded Label |
+|----------------|--------------|
+| Disease | 1 |
+| Healthy | 0 |
+
+---
+
+## 4. Outlier Treatment
+
+Outliers were handled using the Interquartile Range (IQR) method.
 
 ```text
-Recall = True Positives / (True Positives + False Negatives)
+Lower Bound = Q1 − 1.5 × IQR
+Upper Bound = Q3 + 1.5 × IQR
 ```
 
-### Why It Is Critical
-
-A **False Negative** occurs when:
-
-```text
-Actual Condition : Liver Disease Present
-Prediction       : Healthy
-```
-
-This is the most dangerous error because:
-
-- The disease remains undetected
-- Treatment may be delayed
-- Clinical intervention may not occur in time
-- Patient outcomes may worsen
-
-### Project Goal
-
-The primary objective is to identify as many patients with liver disease as possible.
-
-✅ High Recall → More diseased patients correctly identified
-
-❌ Low Recall → Higher risk of missing actual disease cases
-
-For this reason, Recall was treated as a key evaluation metric during model selection.
+Values outside these boundaries were clipped.
 
 ---
 
-## 🚀 Technology Stack
+## 5. Feature Scaling
+
+Standardization was applied using StandardScaler.
+
+```python
+scaler = StandardScaler()
+```
+
+The fitted scaler was saved for deployment.
+
+---
+
+# 🤖 Machine Learning Models Evaluated
+
+Four machine learning algorithms were trained and evaluated.
+
+| Model | Accuracy | Precision | Recall | F1 Score |
+|---------|---------|---------|---------|---------|
+| KNN | 71.79% | 77.17% | 85.54% | 81.14% |
+| Decision Tree | 59.83% | 70.45% | 74.70% | 72.51% |
+| Random Forest | 73.50% | 75.49% | 92.77% | 83.24% |
+| XGBoost | 68.38% | 74.47% | 84.34% | 79.10% |
+
+---
+
+## Model Comparison Visualization
+
+![Model Comparison](core/model_comparison.png)
+
+---
+
+# 🏆 Selected Production Model
+
+## Random Forest Classifier
+
+The Random Forest model was selected as the final deployment model after comparing all four algorithms.
+
+### Performance Highlights
+
+- Highest Accuracy: **73.50%**
+- Highest Recall: **92.77%**
+- Highest F1-Score: **83.24%**
+
+### Why Random Forest?
+
+Random Forest achieved the strongest overall performance across the evaluation metrics.
+
+The model successfully identified approximately 93 out of every 100 liver disease cases, making it highly effective for risk prediction and screening applications.
+
+Its strong balance between Accuracy, Recall, and F1-Score made it the most reliable model for deployment.
+
+---
+
+# 🚀 Deployment Architecture
+
+The application follows a decoupled architecture:
+
+### Backend
+
+- FastAPI
+- REST API Endpoint
+- Model Loading
+- Prediction Service
+
+### Frontend
+
+- Streamlit
+- User Input Forms
+- Real-Time Prediction Interface
+
+### Model Persistence
+
+- Joblib
+- Saved Scaler
+- Saved Trained Model
+
+---
+
+# 🖥️ Application Demonstration
+
+## Home Interface
+
+
+```markdown
+![Home Screen](images/home_screen.png)
+```
+
+---
+
+## Prediction Example – Low Risk
+
+
+```markdown
+![Low Risk Prediction](images/low_risk_prediction.png)
+```
+
+---
+
+## Prediction Example – High Risk
+
+```markdown
+![High Risk Prediction](images/high_risk_prediction.png)
+```
+
+---
+
+# 🛠️ Technologies Used
 
 ### Programming Language
 
@@ -226,12 +324,12 @@ For this reason, Recall was treated as a key evaluation metric during model sele
 - Scikit-Learn
 - XGBoost
 
-### Data Processing
+### Data Analysis
 
 - Pandas
 - NumPy
 
-### Data Visualization
+### Visualization
 
 - Matplotlib
 - Seaborn
@@ -245,72 +343,42 @@ For this reason, Recall was treated as a key evaluation metric during model sele
 
 - Streamlit
 
+### Model Serialization
+
+- Joblib
+
 ---
 
-## ⚡ Installation
+# ▶️ Running the Project Locally
 
-### Clone Repository
-
-```bash
-git clone https://github.com/your-username/liver-disease-risk-prediction.git
-cd liver-disease-risk-prediction
-```
-
-### Create Virtual Environment
-
-**Windows**
+## Clone Repository
 
 ```bash
-python -m venv venv
-venv\Scripts\activate
+git clone https://github.com/DurgaDevi335/Liver-Disease-Risk-Assessment.git
+
+cd Liver-Disease-Risk-Assessment
 ```
 
-**Linux/macOS**
-
-```bash
-python -m venv venv
-source venv/bin/activate
-```
-
-### Install Dependencies
+## Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-## ▶️ Running the Project
-
-Open **three separate terminal windows**.
-
-### Window 1 — Train the Model
+## Train Model
 
 ```bash
 cd core
+
 python train.py
 ```
 
-This step:
-
-- Loads the dataset
-- Performs preprocessing
-- Trains machine learning models
-- Saves trained model artifacts
-
----
-
-### Window 2 — Start FastAPI Backend
+## Start Backend
 
 ```bash
 cd backend
+
 uvicorn api:app --reload
-```
-
-Backend URL:
-
-```text
-http://127.0.0.1:8000
 ```
 
 API Documentation:
@@ -319,16 +387,15 @@ API Documentation:
 http://127.0.0.1:8000/docs
 ```
 
----
-
-### Window 3 — Launch Streamlit Frontend
+## Launch Frontend
 
 ```bash
 cd frontend
+
 streamlit run app.py
 ```
 
-Frontend URL:
+Application URL:
 
 ```text
 http://localhost:8501
@@ -336,70 +403,31 @@ http://localhost:8501
 
 ---
 
-## 🔌 API Workflow
+# 🔮 Future Enhancements
 
-```text
-Streamlit Frontend
-        │
-        ▼
-FastAPI Backend
-        │
-        ▼
-Trained ML Model
-        │
-        ▼
-Prediction Result
-```
-
----
-
-## 📈 Future Enhancements
-
-- Hyperparameter tuning
+- Hyperparameter Tuning
 - Explainable AI using SHAP
-- Docker containerization
-- CI/CD integration
-- Cloud deployment
-- Model monitoring
-- Automated retraining pipeline
+- Docker Containerization
+- Cloud Deployment
+- CI/CD Integration
+- Automated Model Retraining
 
 ---
 
-## 🎯 Key Highlights
-
-- End-to-End Machine Learning Workflow
-- Healthcare Risk Prediction Application
-- FastAPI REST API Deployment
-- Interactive Streamlit Dashboard
-- Multiple Model Benchmarking
-- Comprehensive EDA
-- Recall-Oriented Model Evaluation
-- Modular and Scalable Architecture
-
----
-
-## 👩‍💻 Author
+# 👩‍💻 Author
 
 **Durga Devi Ravipati**
 
-B.Tech, Computer Science & Engineering (Cyber Security)
+B.Tech – Computer Science and Engineering (Cyber Security)
 
-### Areas of Interest
+GitHub:
+https://github.com/DurgaDevi335
 
-- Machine Learning
-- Artificial Intelligence
-- Data Science
-- Healthcare Analytics
-- Full Stack Development
-
-GitHub: https://github.com/DurgaDevi335
+LinkedIn:
+https://www.linkedin.com/in/durga-devi-ravipati
 
 ---
 
-## 📜 Disclaimer
+# ⚠️ Disclaimer
 
-This project is intended for educational, research, and portfolio purposes only. Predictions generated by the system should not be used as a substitute for professional medical diagnosis, treatment, or clinical decision-making.
-
----
-
-⭐ If you found this project useful, consider giving it a star!
+This project is developed for educational and research purposes. The predictions generated by the system should not be considered medical advice or a substitute for professional diagnosis.
