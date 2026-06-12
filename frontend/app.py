@@ -37,7 +37,7 @@ if st.button("Execute Real-Time Diagnosis", type="primary"):
     }
     
     try:
-        response = requests.post("https://your-render-app-name.onrender.com/predict", json=payload)
+        response = requests.post("https://liver-backend-nrjs.onrender.com", json=payload)
         if response.status_code == 200:
             output = response.json()
             
