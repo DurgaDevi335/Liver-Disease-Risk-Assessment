@@ -1,32 +1,388 @@
-# Real-Time Liver Function Diagnostic & Machine Learning Pipeline
+# 🩺 Liver Disease Risk Prediction System
 
-An end-to-end, production-grade Machine Learning system designed to evaluate standard Liver Function Test (LFT) clinical parameters and deliver instantaneous real-time risk classification. This architecture decouples raw pipeline computing from production-level hosting, splitting the codebase into a mathematical preprocessing engine, a high-throughput FastAPI REST backend, and an interactive frontend clinical workspace.
+A Machine Learning-based web application that predicts the likelihood of liver disease using patient clinical data.
+
+This project follows a complete end-to-end workflow, including data preprocessing, model training, backend API development, and frontend deployment. Users can enter patient health parameters through an interactive web interface and receive real-time disease risk predictions.
+
+Key Components
+Machine Learning Pipeline for data preprocessing, feature engineering, model training, and evaluation
+FastAPI Backend for serving prediction requests through REST APIs
+Streamlit Frontend for an interactive and user-friendly interface
+Model Comparison Framework to evaluate multiple machine learning algorithms and select the best-performing model
+---
+
+# 📌 Project Architecture
+
+The application is organized into three independent modules:
+
+```text
+Liver-Disease-Risk-Prediction/
+│
+├── core/
+│   ├── train.py
+│   ├── target_distribution.png
+│   ├── correlation_matrix.png
+│   ├── datasets/
+│   ├── models/
+│   └── preprocessing/
+│
+├── backend/
+│   ├── api.py
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── app.py
+│   └── requirements.txt
+│
+└── README.md
+```
 
 ---
 
-## 📐 End-to-End System Topology
+# 🚀 Features
 
-The platform maps production data engineering patterns, processing real-time clinical payloads exactly like a production hospital cloud deployment:
+### Machine Learning Pipeline
+
+* Data preprocessing and cleaning
+* Feature engineering
+* Model training and evaluation
+* Multiple model comparison
+* Model persistence for deployment
+
+### Backend API
+
+* Built using **FastAPI**
+* RESTful prediction endpoints
+* Fast inference performance
+* JSON-based communication
+
+### Frontend Dashboard
+
+* Built using **Streamlit**
+* Interactive patient data input
+* Real-time prediction results
+* Clean and intuitive user interface
+
+### End-to-End Workflow
 
 ```text
-[Raw Input Data] ──► [Median Imputation] ──► [Categorical Encoding] ──► [IQR Outlier Clipping]
-                                                                                │
-[Streamlit UI] ◄─── [FastAPI Endpoint] ◄─── [Model Inference] ◄─── [StandardScaler Scale]
-🛠️ Deep Data Engineering & Preprocessing WorkflowTo ensure algorithmic integrity and prevent runtime exceptions when handling live patient records, the core engine enforces rigorous data purification steps:1. Robust Missing Data ImputationInstead of utilizing standard row-deletion patterns (dropna) which discard high-value clinical observations, the preprocessing pipeline dynamically maps column-specific median values to fill gaps (e.g., missing values within Albumin_and_Globulin_Ratio). This ensures dataset volume and minority-class observation density are fully preserved.2. Deterministic Categorical Variable EncodingTo transform clinical object variables into clean mathematical dimensions for classification matrices, high-level string tokens are mapped deterministically to structural numeric values:Male -> 1Female -> 03. Interquartile Range (IQR) Outlier MitigationMedical laboratory records naturally present acute, organic spikes (e.g., severe inflammation driving Alkaline_Phosphotase upwards of 2000 IU/L). Leaving these anomalies unmodified warps distance-dependent decision thresholds (KNN) and creates distorted tree splits. The pipeline isolates feature-specific distributions, computes interquartile boundaries, and caps extreme observations cleanly back to the statistical fence.4. Comprehensive Isolation from Data LeakageTo eliminate feature bias and data leakage, feature standardization is strategically decoupled. The StandardScaler computes normalization vectors exclusively on the training matrix partitions. It centers features to a mean of 0 and a variance of 1. This computed state is permanently frozen and saved into an independent binary file (production_scaler.joblib) to scale future, unseen live patient metrics without re-computing historical statistics.📊 Automated Exploratory Data Analysis (EDA)Prior to model selection, the pipeline analyzes the internal distributions and variable dependencies within the feature space.1. Structural Target Label BalanceThe underlying training set contains an explicit Class Imbalance, where nearly 71.5% of historical patient cases present active liver pathology compared to only 28.5% healthy controls. This structure justifies the deployment of stratified partitioning splits and balanced algorithmic penalization during model building.2. Biomarker Pearson Correlation MatrixThe auto-generated heatmap correlation matrix tracks multi-dimensional dependencies across separate enzymes and compounds. It highlights a strong positive correlation between Total_Bilirubin and Direct_Bilirubin, alongside a key structural relationship between Albumin and Total_Protiens.📈 Multi-Architecture Model Comparison & BenchmarkThe core execution environment trains, tunes, and evaluates four distinct algorithmic paradigms simultaneously across a unified testing matrix. Every model is thoroughly scored across all core performance dimensions:Model Architecture ParadigmTest AccuracyEvaluation PrecisionEvaluation Recall (Sensitivity)Harmonic F1-ScoreK-Neighbors Classifier (KNN)65.52%73.12%81.93%77.27%Decision Tree Classifier71.55%77.78%84.34%80.92%Random Forest Ensemble73.28%75.49%92.77%83.24%XGBoost Framework74.14%76.53%90.36%82.87%🔍 Architectural Insight for Amazon ML Evaluation Panels:In high-stakes diagnostic engineering, optimizing for Recall (Sensitivity) is mathematically and operationally superior to focusing solely on baseline accuracy. A high Recall (such as the Random Forest Ensemble's 92.77%) establishes that the system successfully catches 93 out of 100 truly sick liver disease patients. This minimizes dangerous False Negatives (incorrectly flagging a sick patient as healthy), ensuring patient safety in a live deployment scenario.📂 Project Repository Blueprintdata/ : High-integrity storage for baseline patient medical records.core/ : Preprocessing assets, mathematical encoders, outlier mitigation workflows, and pipeline training logic.backend/ : Real-time production web endpoint engine built using FastAPI.frontend/ : High-performance browser-native clinician interface designed using Streamlit.🚀 Local Deployment and Startup GuideTo launch this production stack on your local machine, run the following execution sequence across separate terminal sessions:1. Run the Machine Learning PipelineComputes the complete EDA suite, applies outlier boundaries, runs the multi-model comparison matrix, and saves the top pipeline assets:Bashcd core
+Patient Data
+      ↓
+Data Preprocessing
+      ↓
+Trained ML Model
+      ↓
+FastAPI Backend
+      ↓
+Streamlit Frontend
+      ↓
+Risk Prediction Output
+```
+
+---
+
+# 📊 Exploratory Data Analysis (EDA)
+
+## Target Label Balance
+
+![Target Label Balance](core/target_distribution.png)
+
+### Purpose
+
+Understanding class distribution is critical in medical datasets because severe imbalance can lead to biased predictions and poor generalization.
+
+---
+
+## Feature Interaction Correlations
+
+![Feature Interaction Correlations](core/correlation_matrix.png)
+
+### Purpose
+
+Correlation analysis helps identify:
+
+* Highly related features
+* Potential multicollinearity
+* Important feature interactions
+* Data-driven feature selection opportunities
+
+---
+
+# 🤖 Machine Learning Models Evaluated
+
+The following classification models were trained and compared.
+
+| Model Architecture     | Accuracy | Precision | Recall (Sensitivity) | F1-Score |
+| ---------------------- | -------- | --------- | -------------------- | -------- |
+| KNN                    | 65.52%   | 73.12%    | 81.93%               | 77.27%   |
+| Decision Tree          | 71.55%   | 77.78%    | 84.34%               | 80.92%   |
+| Random Forest Ensemble | 73.28%   | 75.49%    | 92.77%               | 83.24%   |
+| XGBoost Framework      | 74.14%   | 76.53%    | 90.36%               | 82.87%   |
+
+---
+
+# 🏆 Best Performing Model
+
+### XGBoost Framework
+
+The XGBoost model achieved the highest overall accuracy while maintaining strong precision, recall, and F1-score performance.
+
+### Key Advantages
+
+* Excellent generalization capability
+* Handles complex feature interactions
+* Reduced overfitting compared to standalone trees
+* Strong performance on structured healthcare datasets
+
+---
+
+# ⚠️ Why Recall (Sensitivity) Matters Most
+
+In medical diagnosis systems, **Recall (Sensitivity)** is often the most important evaluation metric.
+
+### Recall Formula
+
+```text
+Recall = True Positives / (True Positives + False Negatives)
+```
+
+### Why It Is Critical
+
+A **False Negative** occurs when:
+
+```text
+Patient has liver disease
+BUT
+Model predicts healthy
+```
+
+This is the most dangerous error because:
+
+* Disease remains undetected
+* Treatment may be delayed
+* Health complications may worsen
+* Patient outcomes may be negatively affected
+
+### Project Objective
+
+The primary goal is to identify as many potentially affected patients as possible.
+
+Therefore:
+
+✅ High Recall = More diseased patients correctly detected
+
+❌ Low Recall = Higher risk of missing actual cases
+
+For healthcare applications, minimizing False Negatives is often more important than maximizing overall accuracy.
+
+---
+
+# 🛠️ Technology Stack
+
+## Machine Learning
+
+* Python
+* Scikit-Learn
+* XGBoost
+* NumPy
+* Pandas
+
+## Data Visualization
+
+* Matplotlib
+* Seaborn
+
+## Backend
+
+* FastAPI
+* Uvicorn
+
+## Frontend
+
+* Streamlit
+
+---
+
+# ⚙️ Installation & Setup
+
+## 1. Clone Repository
+
+```bash
+git clone https://github.com/your-username/liver-disease-risk-prediction.git
+cd liver-disease-risk-prediction
+```
+
+---
+
+## 2. Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
+---
+
+## 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# ▶️ Running the Complete System
+
+Open **three separate terminal windows**.
+
+---
+
+## Window 1 — Train the Model
+
+Navigate to the core directory:
+
+```bash
+cd core
 python train.py
-2. Spin up the Real-Time Backend API ServerLoads the frozen model weights and scaler parameters into system memory, exposing a web endpoint listening for new patient data payloads:Bashcd backend
+```
+
+This step:
+
+* Loads the dataset
+* Performs preprocessing
+* Trains the model
+* Saves trained artifacts
+
+---
+
+## Window 2 — Start FastAPI Backend
+
+Navigate to the backend directory:
+
+```bash
+cd backend
 uvicorn api:app --reload
-3. Launch the Web App UILaunches the browser-native presentation layer which interacts with the FastAPI backend in real-time:Bashcd frontend
+```
+
+Backend will start at:
+
+```text
+http://127.0.0.1:8000
+```
+
+API documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+---
+
+## Window 3 — Launch Streamlit Frontend
+
+Navigate to the frontend directory:
+
+```bash
+cd frontend
 streamlit run app.py
+```
 
-***
+The Streamlit application will open automatically in your browser.
 
-### Step 2: Save the File Correctly
-When you click **File -> Save As** in Notepad, do this exactly:
+---
 
-1. Look at the bottom of the Save window where it says **"Save as type"**. Click it and change it from *Text Documents (*.txt)* to **"All Files (*.*)"**.
-2. In the **File name** box, type: `README.md`
-3. Save it directly inside your main **`Liver_Disease_Project`** folder (right next to your `data`, `core`, `backend`, and `frontend` folders).
+# 📡 API Workflow
 
-### Why did we save this text?
-When you push this to GitHub, GitHub automatically translates all the symbols (like `#`, `##`, and `|`) into bold headers, beautifully formatted tables, and **it will display your EDA charts (`correlation_matrix.png`, etc.) directly on your screen** for the Amazon ML reviewers to see instantly!
+```text
+Streamlit Frontend
+        ↓
+FastAPI Backend
+        ↓
+ML Prediction Model
+        ↓
+Prediction Result
+        ↓
+Frontend Display
+```
+
+---
+
+# 📈 Future Improvements
+
+* Advanced feature engineering
+* Hyperparameter optimization
+* Explainable AI (SHAP/LIME)
+* Docker containerization
+* Cloud deployment
+* Continuous model monitoring
+* Electronic Health Record (EHR) integration
+
+---
+
+# 🎯 Project Highlights
+
+✅ End-to-End Machine Learning Workflow
+
+✅ Healthcare-Oriented Risk Prediction
+
+✅ FastAPI Production Backend
+
+✅ Streamlit Interactive Dashboard
+
+✅ Multiple Model Benchmarking
+
+✅ Automated Training Pipeline
+
+✅ Medical Metric Focus (Recall Optimization)
+
+✅ Recruiter-Friendly Architecture
+
+---
+
+# 👩‍💻 Author
+
+**Durga Devi Ravipati**
+
+B.Tech – Computer Science & Engineering (Cyber Security)
+
+Passionate about:
+
+* Machine Learning
+* Artificial Intelligence
+* Full Stack Development
+* Healthcare AI Solutions
+
+---
+
+# ⭐ Acknowledgements
+
+Special thanks to the open-source community and the developers of:
+
+* Scikit-Learn
+* XGBoost
+* FastAPI
+* Streamlit
+* Pandas
+* NumPy
+* Matplotlib
+
+for providing the tools that made this project possible.
+
+---
+
+## 📜 License
+
+This project is intended for educational, research, and portfolio purposes.
+
+Please verify all medical decisions with qualified healthcare professionals. This system is designed to assist prediction workflows and should not replace professional medical diagnosis.
