@@ -290,26 +290,25 @@ The application follows a decoupled architecture:
 ## Home Interface
 
 
-```markdown
 ![Home Screen](images/home_screen.png)
-```
+
 
 ---
 
 ## Prediction Example – Low Risk
 
 
-```markdown
+
 ![Low Risk Prediction](images/low_risk_prediction.png)
-```
+
 
 ---
 
 ## Prediction Example – High Risk
 
-```markdown
+
 ![High Risk Prediction](images/high_risk_prediction.png)
-```
+
 
 ---
 
