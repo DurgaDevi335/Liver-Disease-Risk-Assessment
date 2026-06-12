@@ -321,7 +321,7 @@ The application follows a decoupled architecture:
 ### Machine Learning
 
 - Scikit-Learn
-- XGBoost
+- Random Forest
 
 ### Data Analysis
 
