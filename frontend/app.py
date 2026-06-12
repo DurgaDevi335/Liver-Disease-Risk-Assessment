@@ -1,4 +1,3 @@
-# frontend/app.py
 import streamlit as st
 import requests
 
@@ -24,29 +23,36 @@ with col2:
 
 if st.button("Execute Real-Time Diagnosis", type="primary"):
     payload = {
-        "Age": int(age),
+        "Age": float(age),
         "Gender": 1 if gender == "Male" else 0,
         "Total_Bilirubin": float(tot_bil),
         "Direct_Bilirubin": float(dir_bil),
-        "Alkaline_Phosphotase": int(alk_phos),
-        "Alamine_Aminotransferase": int(alt),
-        "Aspartate_Aminotransferase": int(ast),
+        "Alkaline_Phosphotase": float(alk_phos),
+        "Alamina_Aminotransferase": float(alt),
+        "Aspartate_Aminotransferase": float(ast),
         "Total_Protiens": float(proteins),
         "Albumin": float(albumin),
         "Albumin_and_Globulin_Ratio": float(ag_ratio)
     }
     
+    # 🔴 ADDED THE MISSING ENDPOINT LINK: /predict
+    BACKEND_URL = "https://liver-backend-nrjs.onrender.com/predict"
+    
     try:
-        response = requests.post("https://liver-backend-nrjs.onrender.com", json=payload)
+        response = requests.post(BACKEND_URL, json=payload)
         if response.status_code == 200:
             output = response.json()
             
+            # Extract data using the exact keys your backend sends back
+            risk_status = output["risk_status"]  # 1 = High Risk, 0 = Low Risk
+            confidence = round(output["confidence_score"] * 100, 2)
+            
             st.write("---")
-            if output["disease_detected"]:
-                st.error(f"🚨 **High Risk Warning:** Active tissue degeneration indicators tracked (Confidence Score: {output['risk_percentage']}%).")
+            if risk_status == 1:
+                st.error(f"🚨 **High Risk Warning:** Active tissue degeneration indicators tracked (Confidence Score: {confidence}%).")
             else:
-                st.success(f"💚 **Low Risk Confirmed:** Patient blood work falls within normal functioning baseline metrics.")
+                st.success(f"💚 **Low Risk Confirmed:** Patient blood work falls within normal functioning baseline metrics. (Confidence Score: {100 - confidence}%)")
         else:
-            st.error("Server processing rejection.")
-    except Exception:
-        st.error("API link unreachable. Make sure your Uvicorn server window is actively running.")
+            st.error(f"Server processing rejection. Error Code: {response.status_code}")
+    except Exception as e:
+        st.error(f"API link unreachable. Technical details: {str(e)}")
